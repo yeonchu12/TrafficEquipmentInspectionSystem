@@ -8,7 +8,8 @@ import base64
 from flask_cors import CORS
 import os
 import json
-from collections import defaultdict
+
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -73,6 +74,52 @@ def get_images2():
     image_folder = os.path.join(app.static_folder, "img/carouselChart2")
     images = [f"static/img/carouselChart2/{img}" for img in os.listdir(image_folder) if img.endswith((".png", ".jpg", ".jpeg", ".gif"))]
     return jsonify(images)  # 返回图片的路径列表（JSON 格式）
+
+
+@app.route('/get_chart_data')
+def get_chart_data():
+    with open('jiaotong_data.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    total_count = len(data)
+    damaged_count = sum(1 for item in data if item['is_damaged'] == 1)
+    undamaged_count = total_count - damaged_count
+
+    # 统计每种物品的损坏和未损坏数量
+    item_stats = {}
+    for item in data:
+        name = item['name']
+        if name not in item_stats:
+            item_stats[name] = {'damaged': 0, 'undamaged': 0}
+        if item['is_damaged'] == 1:
+            item_stats[name]['damaged'] += 1
+        else:
+            item_stats[name]['undamaged'] += 1
+
+    # 计算损坏和未损坏占总数的百分比
+    pass_rate_data = {
+        'labels': ['合格', '故障'],
+        'data': [undamaged_count / total_count * 100, damaged_count / total_count * 100]
+    }
+
+    # 计算损坏物品占所有损坏数的比例
+    fault_distribution_data = {
+        'labels': list(item_stats.keys()),
+        'data': [item_stats[name]['damaged'] / damaged_count * 100 for name in item_stats]
+    }
+
+    # 计算损坏的数量
+    faults_bar_data = {
+        'labels': list(item_stats.keys()),
+        'data': [item_stats[name]['damaged'] for name in item_stats]
+    }
+
+    return jsonify({
+        'pass_rate_data': pass_rate_data,
+        'fault_distribution_data': fault_distribution_data,
+        'faults_bar_data': faults_bar_data
+    })
+
 if __name__ == '__main__':
     print(f"Running on http://localhost:5000")
     socketio.run(app, host='0.0.0.0', port=5000)
