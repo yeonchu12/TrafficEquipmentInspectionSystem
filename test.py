@@ -7,7 +7,8 @@ from flask_socketio import SocketIO, emit
 import base64
 from flask_cors import CORS
 import os
-
+import json
+from collections import defaultdict
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
