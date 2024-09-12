@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>大创</title>
+    <link rel="stylesheet" href="../static/css/plugins.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/sidebar2.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 引用 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script> <!-- 引用 dataLabels 插件 -->
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: url('../static/img/banner/banner-11.jpg') center/cover no-repeat;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7); /* 背景色 + 透明度设置为0.7 */
+            z-index: -1;
+        }
+
+        :root {
+            --sidebar-bg-color: rgb(224, 232, 240);
+        }
+        
+        .Sidebar:hover li a i {
+            color: rgb(189, 173, 173); /* 当侧边栏展开时，所有图标变为黑色 */
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            width: 60%; /* 保持宽度一致 */
+        }
+
+        /* Top two charts fill the width */
+        #chart1, #chart2 {
+            position: absolute;
+            top: 10%;
+            width: 43%;  /* 缩小宽度使图表靠近一点 */
+            height: 50%;  /* 加大高度 */
+        }
+
+        #chart1 {
+            left: 5%;  /* 向右移动以缩小间距并避开左侧边栏 */
+            top:8%;
+        }
+
+        #chart2 {
+            right: 5%;  /* 缩小图表右边距 */
+            top:8%;
+
+        }
+
+        /* Bottom left chart with the same width */
+        #chart3 {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;  /* 与左上图表保持一致 */
+            top:60%;
+            width: 43%;  /* 宽度与上方一致 */
+            height: 35%;  /* 高度调整 */
+        }
+        #chart4 {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;  /* 与左上图表保持一致 */
+            top:60%;
+            width: 43%;  /* 宽度与上方一致 */
+            height: 35%;  /* 高度调整 */
+        }
+        #chart4 iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Label styling for outside percentage labels */
+        .chart-container .chart-label {
+            position: absolute;
+            text-align: center;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="Sidebar">
+        <!-- --lqj是自定义属性，通过var函数可调用 -->
+        <li style="--lqj:25%;">
+            <a href="{{ url_for('index') }}">
+                <i class="fa fa-home" aria-hidden="false"></i>
+            </a>
+        </li>
+        <li style="--lqj:35%;">
+            <a href="{{ url_for('video') }}">
+                <i class="fa fa-youtube-play" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:45%;">
+            <a href="{{ url_for('analysis') }}">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:55%;">
+            <a href="{{ url_for('question') }}">
+                <i class="fa fa-question" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:65%;">
+            <a href="{{ url_for('information') }}">
+                <i class="fa fa-address-card" aria-hidden="true"></i>
+            </a>
+        </li>
+        <div class="top"></div>
+        <div class="middle"></div>
+        <div class="bottom"></div>
+    </div>
+
+    <div class="navbar-header navbar-header-custom" style="margin-left: 2%;">
+        <a href="{{ url_for('index') }}" class="navbar-brand logodefault">
+            <img id="logo" src="../static/img/logos/logo.png" alt="logo">
+        </a>
+    </div>
+    <div style="border-bottom: 1px solid rgb(232, 232, 232); width: 100%;"></div>
+
+    <!-- Chart Sections -->
+    <div class="chart-container" id="chart1">
+        <canvas id="passRateChart"></canvas>
+    </div>
+    <div class="chart-container" id="chart2">
+        <canvas id="faultDistributionChart"></canvas>
+    </div>
+    <div class="chart-container" id="chart3">
+        <canvas id="faultsBarChart"></canvas>
+    </div>
+    <div class="chart-container" id="chart4">
+            <iframe class="map-h500 position-relative map-navigation" id="gmap_canvas" src="https://maps.google.com/maps?q=%E5%90%88%E8%82%A5&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+    </div>
+
+    <script>
+        // 定制的图表渐变
+        function createGradient(ctx, color1, color2) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            return gradient;
+        }
+
+        // 第一个环形图（合格率）
+        const passRateCtx = document.getElementById('passRateChart').getContext('2d');
+        const passRateGradient = createGradient(passRateCtx, '#4e73df', '#1cc88a');
+
+        const passRateData = {
+            labels: ['合格', '故障'],
+            datasets: [{
+                data: [92, 8],
+                backgroundColor: [passRateGradient, '#e74a3b'],
+                hoverBackgroundColor: ['#2e59d9', '#d34234'],
+                borderWidth: 2,
+            }],
+        };
+
+        const passRateConfig = {
+            type: 'doughnut',
+            data: passRateData,
+            options: {
+                responsive: true,
+                padding: {
+                left: 20,    // 给图表左侧增加空间
+                right: 20,   // 给图表右侧增加空间
+                top: 20,     // 给图表顶部增加空间
+                bottom: 20   // 给图表底部增加空间
+            },
+                plugins: {
+                    legend: {
+                        position: 'left',  // 将标签放在左侧
+                        labels: {
+                            font: {
+                                size: 16
+                            },
+                            color: '#333'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#5a5c69',
+                        bodyColor: '#fff',
+                        bodyFont: {
+                            size: 16,
+                        },
+                        padding: 10,
+                        cornerRadius: 10,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        color: '#333',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                        anchor: 'end',
+                        align: 'end',
+                        offset: 10,
+                        formatter: (value, ctx) => {
+                            let total = ctx.chart._metasets[0].total;
+                            let percentage = (value / total * 100).toFixed(2) + '%';
+                            return percentage;
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+
+        // 第二个环形图（当前主板故障分布）
+        const faultDistributionCtx = document.getElementById('faultDistributionChart').getContext('2d');
+        const faultDistributionData = {
+            labels: ['交通信号灯', '限高架', '诱导屏', '监控',"信号箱"],
+            datasets: [{
+                data: [47.6, 8.9, 17.7, 16,9.8],
+                backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e', '#e74a3b', '#5a5c69'],
+                hoverBackgroundColor: ['#375ab4', '#138a5e', '#c69324', '#d34234', '#4d4f5b'],
+
+                borderWidth: 2,
+            }],
+        };
+
+        const faultDistributionConfig = {
+            type: 'doughnut',
+            data: faultDistributionData,
+            options: {
+                responsive: true,
+                padding: {
+                left: 20,    // 给图表左侧增加空间
+                right: 200,   // 给图表右侧增加空间
+                top: 20,     // 给图表顶部增加空间
+                bottom: 20   // 给图表底部增加空间
+            },
+                plugins: {
+                    legend: {
+                        position: 'left',  // 将标签放在左侧
+                        labels: {
+                            font: {
+                                size: 16
+                            },
+                            color: '#333'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#5a5c69',
+                        bodyColor: '#fff',
+                        bodyFont: {
+                            size: 16,
+                        },
+                        padding: 10,
+                        cornerRadius: 10,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        color: '#333',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                        anchor: 'end',
+                        align: 'end',
+                        formatter: (value, ctx) => {
+                            let total = ctx.chart._metasets[0].total;
+                            let percentage = (value / total * 100).toFixed(2) + '%';
+                            
+                            return percentage;
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+
+        // 柱状图（今天主板故障分布）
+        const faultsBarCtx = document.getElementById('faultsBarChart').getContext('2d');
+
+// 故障分布数据
+const faultsBarData = {
+    labels: ['交通信号灯', '限高架', '诱导屏', '监控',"信号箱"],
+    datasets: [{
+        label: '故障分布',
+        data: [104, 18, 67, 14,9],  // 数据集
+        backgroundColor: createGradient(faultsBarCtx, '#36b9cc', '#1cc88a'),
+        borderColor: '#36b9cc',
+        borderWidth: 2,
+        hoverBackgroundColor: '#1c9ec2',
+    }],
+};
+
+// 动态计算数据的最大值
+const maxDataValue = Math.max(...faultsBarData.datasets[0].data);
+
+// 使 Y 轴最大值比最大数据大 10%
+const suggestedMaxValue = maxDataValue * 1.1;
+
+const faultsBarConfig = {
+    type: 'bar',
+    data: faultsBarData,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,  // 从 0 开始
+                suggestedMax: suggestedMaxValue,  // 动态最大值
+                ticks: {
+                    stepSize: 10,   // Y 轴刻度步长
+                    font: {
+                        size: 16    // 字体大小
+                    },
+                    color: '#333'   // 字体颜色
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        size: 16
+                    },
+                    color: '#333'
+                }
+            }
+        },
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true,
+                backgroundColor: '#5a5c69',
+                bodyColor: '#fff',
+                bodyFont: {
+                    size: 16,
+                },
+                padding: 10,
+                cornerRadius: 10,
+                displayColors: false
+            },
+            datalabels: {
+                color: '#333',
+                font: {
+                    weight: 'bold',
+                    size: 16
+                },
+                anchor: 'end',
+                align: 'top',
+                formatter: (value) => value 
+            }
+        },
+        animation: {
+            duration: 1500,
+            easing: 'easeOutBounce'
+        }
+    },
+    plugins: [ChartDataLabels]
+};
+
+
+
+
+        // 渲染图表
+        const passRateChart = new Chart(passRateCtx, passRateConfig);
+        const faultDistributionChart = new Chart(faultDistributionCtx, faultDistributionConfig);
+        const faultsBarChart = new Chart(faultsBarCtx, faultsBarConfig);
+    </script>
+
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/core.min.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+</html>

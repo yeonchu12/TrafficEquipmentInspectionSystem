@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>大创</title>
+    <link rel="stylesheet" href="../static/css/plugins.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/sidebar.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+    <style>
+        :root {
+        --sidebar-bg-color: rgb(255,255,255);
+        }
+        .Sidebar:hover li a i {
+            color:rgb(192, 190, 190) ; /* 当侧边栏展开时，所有图标变为黑色 */
+        }
+
+
+        .card-container {
+            position: fixed; /* 使其固定在屏幕上 */
+            top: 60%; /* 垂直居中 */
+            left: 50%; /* 水平居中 */
+            transform: translate(-50%, -50%); /* 将卡片移动到正中心 */
+            width: 70%;
+            max-width: 5000px;
+            height: 70%;
+            z-index: 1000; /* 确保卡片在最上层 */
+        }
+
+        .card {
+            width: 100%;
+            height: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: row; /* 使内容水平排列 */
+            overflow: hidden;
+            transition: background-color 0.3s ease, background-image 0.3s ease;
+        }
+
+        .color-picker {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .color-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .color-circle:hover {
+            transform: scale(1.3);
+        }
+
+        .color-circle.active {
+            border-color: #333;
+            transform: scale(1.3);
+        }
+
+        .color1 { background-color: #ffffff; } /* 白色 */
+.color2 { background-image: linear-gradient(135deg, #ff00cc, #ffcc00, #00ffcc, #ff0066); } /* 渐变：浅珊瑚色 */
+.color3 { background-image: linear-gradient(135deg, #001f3f, #0088a9, #00c9a7, #92d5c6, #ebf5ee); } /* 渐变：柔和紫红色 */
+.color4 { background-image: linear-gradient(135deg, #272727, #4a4a4a, #6d6d6d, #909090, #b3b3b3, #d6d6d6, #f9f9f9); } /* 渐变：深紫色 */
+.color5 { background-image: linear-gradient(135deg, #c7e9fb, #a6defa, #80d4f9, #5bc9f8, #35bef7); } /* 渐变：深蓝色 */
+.color6 { background-image: linear-gradient(45deg, #f8b195, #355c7d); } /* 渐变：最后一个 */
+
+
+        .left {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            margin-right: 20px; /* 保持左侧和右侧的间距 */
+            background-size: cover; /* 背景图像覆盖整个容器 */
+            background-position: center; /* 背景图像居中 */
+            background-repeat: no-repeat; /* 背景图像不重复 */
+        }
+        /* 背景虚化效果 */
+        .left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(20px); /* 应用虚化效果 */
+            z-index: 1;
+        }
+
+
+        .left img {
+            border-radius: 8px;
+            width: 80%;
+            height: auto;
+            max-height: 90%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            z-index: 2; /* 确保图片在虚化背景的上层 */
+        }
+
+        .left:hover img {
+            transform: scale(1.1);
+        }
+
+        .left .edit-icon {
+            position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 40px; /* 设置宽度 */
+    height: 40px; /* 设置高度 */
+    font-size: 24px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3; /* 确保编辑图标在最上层 */
+}
+
+        .left input[type="file"] {
+            display: none;
+        }
+
+        .right {
+            flex: 2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-left: 10%;
+        }
+
+        .info {
+            flex: 1;
+            min-width: 45%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 36px;
+            color: #333;
+            transition: color 0.3s ease;
+            position: relative;
+            text-align: center;
+        }
+
+        p {
+            color: #555;
+            margin: 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        p i {
+            margin-right: 10px;
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+
+        .edit-icon {
+            position: absolute;
+            right: 10px;
+            font-size: 18px;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .info input[type="text"] {
+            flex: 0 0 60%;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background: none;
+            font-size: 18px;
+            color: #555;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .info input[type="text"]:focus {
+            border-bottom: 2px solid #007bff;
+        }
+
+        .icons {
+            margin-top: 30px;
+        }
+
+        .icons i {
+            font-size: 28px;
+            color: #007bff;
+            margin: 0 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .icons i:hover {
+            transform: scale(1.3);
+            color: #0056b3;
+        }
+
+        /* 样式为图标后的标签文本 */
+        .label-text {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="Sidebar">
+        <!-- --lqj是自定义属性，通过var函数可调用 -->
+        <li style="--lqj:25%;">
+            <a href="{{ url_for('index') }}">
+                <i class="fa fa-home" aria-hidden="false"></i>
+            </a>
+        </li>
+        <li style="--lqj:35%;">
+            <a href="{{ url_for('video') }}">
+                <i class="fa fa-youtube-play" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:45%;">
+            <a href="{{ url_for('analysis') }}">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i>
+            </a>
+        </li>
+<!--        <li style="&#45;&#45;lqj:50%;">-->
+<!--            <a href="#">-->
+<!--                <i class="fa fa-history" aria-hidden="true"></i>-->
+<!--            </a>-->
+<!--        </li>-->
+        <li style="--lqj:55%;">
+            <a href="{{ url_for('question') }}">
+                <i class="fa fa-question" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:65%;">
+            <a href="{{ url_for('information') }}">
+                <i class="fa fa-address-card" aria-hidden="true"></i>
+            </a>
+        </li>
+        <div class="top"></div>
+        <div class="middle"></div>
+        <div class="bottom"></div>
+    </div>
+    <div class="navbar-header navbar-header-custom"style="margin-left: 2%;">
+        <a href="index.html" class="navbar-brand logodefault"><img id="logo" src="../static/img/logos/logo.png" alt="logo"></a>
+    </div>
+    <div style="border-bottom: 1px solid rgb(232, 232, 232); width: 100%;"></div>
+
+
+    <div class="card-container">
+        <div class="color-picker">
+            <div class="color-circle color1 active" data-color="#ffffff" data-image=""></div>
+            <div class="color-circle color2" data-color="" data-image="linear-gradient(135deg, #ff00cc, #ffcc00, #00ffcc, #ff0066)"></div>
+            <div class="color-circle color3" data-color="" data-image="linear-gradient(135deg, #001f3f, #0088a9, #00c9a7, #92d5c6, #ebf5ee)"></div>
+            <div class="color-circle color4" data-color="" data-image="linear-gradient(135deg, #272727, #4a4a4a, #6d6d6d, #909090, #b3b3b3, #d6d6d6, #f9f9f9)"></div>
+            <div class="color-circle color5" data-color="" data-image="linear-gradient(135deg, #c7e9fb, #a6defa, #80d4f9, #5bc9f8, #35bef7)"></div>
+            <div class="color-circle color6" data-color="" data-image="linear-gradient(45deg, #f8b195, #355c7d)"></div>
+        </div>
+
+        <div class="card">
+            <div class="left" id="background-blur">
+                <img id="profile-picture" src="../static/img/banner/banner-10.jpg" alt="Profile Picture">
+                <label for="file-upload" class="edit-icon">
+                    <i class="fas fa-camera"></i>
+                </label>
+                <input id="file-upload" type="file" accept="image/*" onchange="loadFile(event)">
+            </div>
+            <div class="right">
+                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                    <i class="fas fa-user" style="font-size: 40px; color: #007bff; margin-right: 10px;"></i>
+                    <h2 id="name-display" onclick="editName()" style="text-align: center; cursor: pointer; margin: 0;">John Doe</h2>
+                    <input type="text" id="name-input" value="John Doe" onblur="saveName()" style="display: none; text-align: center; font-size: 40px; width: 30%; border: none; border-bottom: 2px solid #007bff; outline: none;">
+                </div>
+                <div class="info-container">
+                    <div class="info">
+                        <p><i class="fas fa-envelope"></i><span class="label-text">Email:</span></p>
+                        <input type="text" id="email" value="john.doe@example.com">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-phone"></i><span class="label-text">Phone:</span></p>
+                        <input type="text" id="phone" value="+1 234 567 890">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-map-marker-alt"></i><span class="label-text">Address:</span></p>
+                        <input type="text" id="address" value="123 Main St, Cityville">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-briefcase"></i><span class="label-text">Job:</span></p>
+                        <input type="text" id="job" value="Software Engineer at TechCorp">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-graduation-cap"></i><span class="label-text">Education:</span></p>
+                        <input type="text" id="education" value="M.Sc. in Computer Science">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-birthday-cake"></i><span class="label-text">Birthday:</span></p>
+                        <input type="text" id="birthday" value="January 1, 1990">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-user"></i><span class="label-text">Gender:</span></p>
+                        <input type="text" id="gender" value="Male">
+                    </div>
+                    <div class="info">
+                        <p><i class="fas fa-calendar"></i><span class="label-text">Age:</span></p>
+                        <input type="text" id="age" value="34 years old">
+                    </div>
+                </div>
+                <div class="icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+function loadFile(event) {
+    var output = document.getElementById('profile-picture');
+    output.src = URL.createObjectURL(event.target.files[0]);
+
+    var container = document.getElementById('background-blur');
+    container.style.backgroundImage = `url(${output.src})`; // 设置背景图像
+
+    output.onload = function() {
+        URL.revokeObjectURL(output.src) // 释放内存
+    }
+}
+
+
+
+document.querySelectorAll('.color-circle').forEach(function(circle) {
+    circle.addEventListener('click', function() {
+        // Remove active class from all circles
+        document.querySelectorAll('.color-circle').forEach(function(c) {
+            c.classList.remove('active');
+        });
+
+        // Add active class to the clicked circle
+        this.classList.add('active');
+
+        // Change the card's background color or gradient
+        const color = this.getAttribute('data-color');
+        const image = this.getAttribute('data-image');
+        const card = document.querySelector('.card');
+
+        if (image) {
+            card.style.backgroundImage = image;
+            card.style.backgroundColor = '';  // Clear background color
+        } else {
+            card.style.backgroundColor = color;
+            card.style.backgroundImage = '';  // Clear background image
+        }
+    });
+});
+
+        function editName() {
+        document.getElementById('name-display').style.display = 'none';
+        document.getElementById('name-input').style.display = 'block';
+        document.getElementById('name-input').focus();
+    }
+
+    function saveName() {
+        const nameInput = document.getElementById('name-input');
+        const nameDisplay = document.getElementById('name-display');
+        nameDisplay.textContent = nameInput.value;
+        nameInput.style.display = 'none';
+        nameDisplay.style.display = 'block';
+    }
+    </script>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/core.min.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>

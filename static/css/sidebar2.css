@@ -1,0 +1,106 @@
+body{
+    /* 100%窗口高度 */
+    height: 100vh;
+}
+.Sidebar{
+    width: 10px;/* 设置左边显示（鼠标为选中时状态的宽度）*/
+    height: 600px;/* 设置左边显示（鼠标为选中时状态的高度）*/
+    /* 绝对固定定位 */
+    position: fixed;
+    left: 0px;
+    /* 垂直居中 */
+    top: 25%;
+    /* transform: translateY(-50%); */
+    background-color:var(--sidebar-bg-color);
+    /* 右上右下圆角 */
+    border-radius: 0 15px 15px 0;
+    overflow: hidden;/* 溢出隐藏 */
+    /* 动画过渡 */
+    transition: 0.3s;
+    z-index: 9999;
+}
+.Sidebar:hover{
+    /* 鼠标移入，展开+改变圆角大小 */
+    width: 120px;
+    border-radius: 0 50px 50px 0;
+}
+.Sidebar:hover li a{
+    /* 鼠标移入，改变字体颜色 */
+    color: rgb(255, 255, 255);
+}
+/* 添加左侧橙色条状 */
+.Sidebar::before{
+    content: "";
+    width: 60%;/*鼠标悬停时显示左侧橙色条宽度*/
+    height: 100%;/*鼠标悬停时显示左侧橙色条高度*/
+    position: absolute;/*绝对定位*/
+    top: 0px;
+    left: 0px;
+    z-index: -1;/* 将z轴设置为-1不让其遮挡图标*/
+    background-color: rgb(17, 88, 231);
+}
+/* 设置上方快 */
+.Sidebar .top{
+    width: calc(100% - 30px);/* 动态设置宽度：宽度比100%的宽度少30px。*/
+    margin-left: 30px;/*左外间距设为30px与上面的.Sidebar{}中的width一致*/
+    height: 25%;/*鼠标悬停时从20%开始计算（也就是第一个块）*/
+    background-color: var(--sidebar-bg-color);/*设置跟着块的上方的块颜色*/
+    border-radius: 0 0 0 20px;/*设置上方的黑块的左下角的弧度*/
+    /* 动画过渡 */
+    transition: 0.2s;
+
+}
+/* 这只中间快 */
+.Sidebar .middle{
+    width: calc(100% - 60px);
+    height: 10%;/*每次鼠标悬停时选中的部分为10%（也就是一个橙色的块）*/
+    background-color: rgb(17, 88, 231);/*设置中间选择时的快的背景色*/
+    margin-left: 30px;/*左外间距设为30px与上面的.Sidebar{}中的width一致*/
+    border-radius: 20px;/*设置边角弧度*/
+    
+}
+/* 设置下方块 原理上上方快一样*/
+.Sidebar .bottom{
+    width: calc(100% - 30px);
+    height: 100%;
+    margin-left: 30px;
+    background-color: var(--sidebar-bg-color);
+    border-radius: 20px 0 0 0;
+
+}
+.Sidebar li{
+    /* 绝对定位 */
+    position: absolute;
+    /* 通过var函数调用自定义属性--lqj */
+    top: var(--lqj);
+    width: 100%;
+    height: 10%;
+    font-size: 30px;
+    /* 弹性布局 水平垂直居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Sidebar li a{
+    /* 字体颜色透明 */
+    color: transparent;
+    /* 动画过渡 */
+    transition: 0.3s;
+}
+/* 分别为每一个li元素设置.top的高度 */
+/* ~是兄弟选择器 */
+.Sidebar li:nth-child(1):hover ~ .top{
+    height: 25%;
+}
+.Sidebar li:nth-child(2):hover ~ .top{
+    height: 35%;
+}
+.Sidebar li:nth-child(3):hover ~ .top{
+    height: 45%;
+}
+.Sidebar li:nth-child(4):hover ~ .top{
+    height: 55%;
+}
+.Sidebar li:nth-child(5):hover ~ .top{
+    height: 65%;
+}

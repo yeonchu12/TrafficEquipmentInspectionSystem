@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- metas -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>大创</title>
+
+    <!-- favicon -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../static/img/logos/favicon.png" />
+    <link rel="apple-touch-icon" href="../static/img/logos/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="../static/img/logos/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="../static/img/logos/apple-touch-icon-114x114.png" />
+    <link rel="stylesheet" href="../static/quform/css/base.css">
+    <link rel="stylesheet" href="../static/css/plugins.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/sidebar.css" rel="stylesheet">
+
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+        --sidebar-bg-color: rgb(255, 255, 255);
+        }
+        .Sidebar:hover li a i {
+            color: black; /* 当侧边栏展开时，所有图标变为黑色 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="Sidebar">
+        <!-- --lqj是自定义属性，通过var函数可调用 -->
+        <li style="--lqj:25%;">
+            <a href="{{ url_for('index') }}">
+                <i class="fa fa-home" aria-hidden="false"></i>
+            </a>
+        </li>
+        <li style="--lqj:35%;">
+            <a href="{{ url_for('video') }}">
+                <i class="fa fa-youtube-play" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:45%;">
+            <a href="{{ url_for('analysis') }}">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i>
+            </a>
+        </li>
+<!--        <li style="&#45;&#45;lqj:50%;">-->
+<!--            <a href="#">-->
+<!--                <i class="fa fa-history" aria-hidden="true"></i>-->
+<!--            </a>-->
+<!--        </li>-->
+        <li style="--lqj:55%;">
+            <a href="{{ url_for('question') }}">
+                <i class="fa fa-question" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:65%;">
+            <a href="{{ url_for('information') }}">
+                <i class="fa fa-address-card" aria-hidden="true"></i>
+            </a>
+        </li>
+        <div class="top"></div>
+        <div class="middle"></div>
+        <div class="bottom"></div>
+    </div>
+
+    <!-- PAGE LOADING
+    ================================================== -->
+    <div id="preloader"></div>
+
+    <!-- MAIN WRAPPER
+    ================================================== -->
+    <div class="main-wrapper">
+
+        <!-- HEADER
+        ================================================== -->
+        <header class="header-style1 menu_area-light">
+
+            <div class="navbar-default border-bottom border-color-light-white">
+                <div class="container-fluid px-lg-1-6 px-xl-2-5 px-xxl-2-9">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-lg-12">
+                            <div class="menu_area alt-font">
+                                <nav class="navbar navbar-expand-lg navbar-light p-0">
+                                    <div class="navbar-header navbar-header-custom">
+                                        <!-- start logo -->
+                                        <a href="{{ url_for('index') }}" class="navbar-brand"><img id="logo" src="../static/img/logos/logo-inner.png" alt="logo" /></a>
+                                        <!-- end logo -->
+                                    </div>
+                                    <div class="navbar-toggler bg-secondary"></div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="page-title-section bg-img cover-background top-position1" data-overlay-dark="5" data-background="../static/img/bg/bg-01.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>项目介绍</h1>
+                    </div>
+                </div>
+            </div>
+            <span class="triangle-3 z-index-1 d-none d-sm-inline-block"></span>
+            <span class="triangle-4 z-index-1 d-none d-sm-inline-block"></span>
+            <img src="../static/img/content/dots2.png" class="position-absolute right-5 bottom-5 ani-top-bottom z-index-3 d-none d-sm-block" alt="...">
+            <div class="page-title-round ani-move"></div>
+        </section>
+
+        <!-- faq
+        ================================================== -->
+        <section>
+            <div class="container">
+                <div class="row mt-n1-9">
+                    <div class="col-lg-6 wow fadeIn mt-1-9" data-wow-delay="100ms">
+                        <div class="accordion style1 pe-xl-1-9" id="accordion">
+                            <div class="card">
+                                <h2 class="card-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">我们项目的核心创新点有哪些？
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion" style="">
+                                    <div class="card-body">
+                                        （1）实时监测：项目结合YOLO与DeepSORT模型实现对交通设施状态的实时监测，能及时发现交通设施的损坏情况。</br>
+                                        （2）嵌入式部署：利用OpenCV技术将模型部署在RK3568单片机上，使模型在边缘侧本地化运行，并上传识别数据，减轻服务器负担。</br>
+                                        （3）监测系统设计：开发了一套交通设施状态监测与巡检系统，可以与嵌入式设备通信，对损坏数据进行可视化展示，方便相关部门及时获取信息并采取行动。</br>
+                                        （4）实时视频推流：采用FFMpeg和RTMP技术实现单片机到网页端的实时视频推流，使监控中心能够即时查看现场情况。</br>
+                                         </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h2 class="card-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">项目的技术原理
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse " aria-labelledby="headingTwo" data-bs-parent="#accordion">
+                                    <div class="card-body">
+                                        （1）YOLO模型：使用YOLO算法进行目标检测与状态识别，通过训练数据集提高模型的准确性和实时性。</br>
+                                        （2）DeepSORT模型：与YOLO模型协同工作，对设施进行追踪，提高设施状态统计的准确性。</br>
+                                        （3）数据可视化：运用Flask、Plotly、Dash和AJAX技术创建数据可视化系统，提供动态、互动的交通数据展示界面。</br>
+                                        （4）嵌入式部署：将YOLO模型转换为OpenCV格式，编译适合RK3568单片机架构的OpenCV库，实现模型在嵌入式设备上的运行。</br>
+                                        （5）实时推流：通过FFMpeg和RTMP协议实现实时视频流的传输，NGINX作为RTMP服务器处理视频流的稳定传输。</br>
+                                         </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h2 class="card-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">我们（项目创意团队）的愿景
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse " aria-labelledby="headingThree" data-bs-parent="#accordion">
+                                    <div class="card-body">
+                                    作为计算机专业的本科生，我们希望通过能够依靠人工智能技术，帮助交通道路管理部门提高交通设施巡检的效率和质量，减少巡检的人力成本和时间成本，提高故障设施的发现和维修效率，提高公众出行的安全性。希望我们的创意能为社会做出贡献，让世界更美好。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeIn mt-1-9" data-wow-delay="200ms">
+                        <div class="ps-xl-1-9">
+                            <img src="../static/img/content/faq.jpg" alt="...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-dark">
+            <div class="container">
+                <div class="section-heading white wow fadeIn" data-wow-delay="200ms">
+                    <span class="text-white">Detail</span>
+                    <h2 class="h1 text-white">系统工作流程介绍</h2>
+                </div>
+                <div class="row mt-n2-9">
+                    <div class="col-md-6 col-lg-4 mt-2-9 wow fadeIn" data-wow-delay="100ms">
+                        <div class="process-style2 text-center position-relative">
+                            <div class="process-icon mb-4">
+                                <i class="fa fa-cloud-upload"></i>
+                                <span class="process-number">01</span>
+                            </div>
+                            <h3 class="text-white mb-3 h5">嵌入式设备与模型端</h3>
+                            <p class="mb-0 w-lg-90 mx-auto text-white">识别模型在嵌入式平台RK3568上运行并对交通设施进行检测，随后将运行结果上传至服务端</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 mt-2-9 wow fadeIn" data-wow-delay="150ms">
+                        <div class="process-style2 text-center position-relative">
+                            <div class="process-icon mb-4">
+                                <i class="fa fa-spinner fa-pulse"></i>
+                                <span class="process-number">02</span>
+                            </div>
+                            <h3 class="text-white mb-3 h5">服务器端</h3>
+                            <p class="mb-0 w-lg-90 mx-auto text-white">服务端接收各嵌入式终端上传的检测数据并进行处理，推送交通设施损坏信息给维修人员，并将数据进行汇总统计，生成具体的统计数据</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 mt-2-9 wow fadeIn" data-wow-delay="200ms">
+                        <div class="process-style2 text-center position-relative last">
+                            <div class="process-icon mb-4">
+                                <i class="fa fa-check-square-o"></i>
+                                <span class="process-number">03</span>
+                            </div>
+                            <h3 class="text-white mb-3 h5">信息管理面板端</h3>
+                            <p class="mb-0 w-lg-90 mx-auto text-white">通过网页信息管理面板端获知设施损坏信息，以便维修人员及时维修损坏设施，管理人员也可以通过统计数据进行宏观研判与部署</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- extra
+        ================================================== -->
+        <section class="pt-0 mt-n7 bg-transparent d-none d-xl-block">
+            <div class="container">
+                <div class="row g-0">
+                    <div class="col-md-4 wow fadeIn" data-wow-delay="100ms">
+                        <div class="bg-img cover-background h-100" data-background="../static/img/bg/bg-06.jpg" style="background-image: url(&quot;img/bg/bg-06.jpg&quot;);"></div>
+                    </div>
+                    <div class="col-md-8 wow fadeIn" data-wow-delay="200ms">
+                        <div class="bg-secondary h-100 p-1-9 p-lg-6 position-relative">
+                            <h3 class="text-white">Call Us (+44)123 456 789</h3>
+                            <p class="text-white mb-0">If you're searching out advice, please call us. We will discover you and get in touch.</p>
+                            <span class="position-absolute top-35 left-n25px"><i class="fas fa-phone p-3 rounded-circle d-block bg-white text-secondary d-none d-md-block"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+        <!-- FOOTER
+        ================================================== -->
+        <footer class="bg-dark"style="background-color: #333333;">
+            <div class="container py-6 py-lg-8">
+                <div class="row mt-n2-9">
+                    <div class="col-md-6 col-lg-5 mt-2-9 wow fadeIn" data-wow-delay="100ms">
+
+                        <div class="footer-logo mb-1-9">
+                            <a href="index.html"><img src="../static/img/logos/footer-light-logo.png" alt="Footer Logo"></a>
+                        </div>
+
+                        <h4 class="text-white mb-1-9 fw-light w-lg-75 display-29 lh-base opacity8">Security and privacy are two sides of the same coin. You can’t have privacy without security and vice versa.</h4>
+
+                        <ul class="social-icon-style1">
+                            <li><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="https://www.youtube.com/" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                        </ul>
+
+                    </div>
+                    <div class="col-md-6 col-lg-3 mt-2-9 wow fadeIn" data-wow-delay="150ms">
+                        <h3 class="text-white h5 mb-1-9">Newsletter</h3>
+                        <p class="text-white opacity9">Don’t miss to subscribe to our new feeds.</p>
+                        <form class="quform newsletter-form" action="../static/quform/newsletter-two.php" method="post" enctype="multipart/form-data" onclick="">
+
+                            <div class="quform-elements">
+                                <div class="row">
+
+                                    <!-- Begin Text input element -->
+                                    <div class="col-md-12">
+                                        <div class="quform-element mb-0">
+                                            <div class="quform-input">
+                                                <input class="form-control" id="email_address" type="text" name="email_address" placeholder="Subscribe with us">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Text input element -->
+
+                                    <!-- Begin Submit button -->
+                                    <div class="col-md-12">
+                                        <div class="quform-submit-inner">
+                                            <button class="btn btn-white text-white m-0" type="submit"><i class="fas fa-paper-plane"></i></button>
+                                        </div>
+                                        <div class="quform-loading-wrap"><span class="quform-loading"></span></div>
+                                    </div>
+                                    <!-- End Submit button -->
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="col-md-6 col-lg-3 mt-2-9 offset-lg-1 wow fadeIn" data-wow-delay="200ms">
+                        <h3 class="text-white h5 mb-1-9">Contacts</h3>
+                        <div class="d-flex mb-1-9">
+                            <div class="flex-shrink-0"><img src="../static/img/icons/icon-phone.png" alt="..."></div>
+                            <div class="flex-grow-1 ms-3">
+                                <h4 class="mb-1 h5 text-white">Contact Us</h4>
+                                <p class="mb-0 text-white">(44) 123-456-789</p>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><img src="../static/img/icons/icon-mail.png" alt="..."></div>
+                            <div class="flex-grow-1 ms-3">
+                                <h4 class="mb-1 h5 text-white">Mail Us</h4>
+                                <p class="mb-0 text-white">info@yourdomain.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-4 border-top border-color-light-white">
+                <div class="container">
+                    <p class="text-white mb-0 text-center">2024年安徽省大数据与人工智能-创意赛 参赛作品</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- BUY TEMPLATE
+    ================================================== -->
+
+
+
+
+    <!-- SCROLL TO TOP
+    ================================================== -->
+    <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+    <!-- all js include start -->
+
+    <!-- jQuery -->
+    <script src="../static/js/jquery.min.js"></script>
+
+    <!-- popper js -->
+    <script src="../static/js/popper.min.js"></script>
+
+    <!-- bootstrap -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+    <!-- jquery -->
+    <script src="../static/js/core.min.js"></script>
+
+
+
+    <!-- custom scripts -->
+    <script src="../static/js/main.js"></script>
+
+    <!-- form plugins js -->
+    <script src="../static/quform/js/plugins.js"></script>
+
+    <!-- form scripts js -->
+    <script src="../static/quform/js/scripts.js"></script>
+
+
+</body>
+
+</html>

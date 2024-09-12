@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map View</title>
+    <style>
+        .map-container {
+            position: relative;
+            height: 500px; /* 设置地图的高度 */
+            width: 100%; /* 设置地图的宽度 */
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <iframe
+            id="gmap_canvas"
+            src="https://maps.google.com/maps?q={{ location|urlencode }}&t=&z=13&ie=UTF8&iwloc=&output=embed"
+            frameborder="0"
+            style="border:0;"
+            allowfullscreen="">
+        </iframe>
+    </div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>大创</title>
+    <link rel="stylesheet" href="../static/css/plugins.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/sidebar.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        :root {
+        --sidebar-bg-color: rgb(48, 60, 87);
+        }
+    </style>
+    <div class="main-wrapper">
+        <header class="header-style1 menu_area-light">
+            <div class="navbar-default border-bottom border-color-light-white">
+                <div class="container-fluid px-lg-1-6 px-xl-2-5 px-xxl-2-9">
+                    <div class="navbar-header navbar-header-custom">
+                        <a href="{{ url_for('index') }}" class="navbar-brand"><img id="logo" src="../static/img/logos/logo-inner.png" alt="logo" /></a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="p-0 top-position1 min-vh-100">
+            <div class="slider-fade1 owl-carousel owl-theme w-100">
+                <div class="text-start item bg-img cover-background left-overlay-dark" data-overlay-dark="85" data-background="../static/img/banner/banner-01.jpg">
+                    <div class="container h-100 d-table position-relative z-index-9">
+                        <div class="d-table-cell align-middle">
+                            <div class="row align-items-center">
+                                <div class="col-md-10 col-lg-9 col-xl-7">
+                                    <span class="text-secondary mb-3 sub-title">Welcome to Website</span>                                
+                                    <h1 class="text-white display-12 display-sm-10 display-md-6 display-lg-4 display-xl-3 display-xxl-1 mb-1-9 mb-md-2-9">基于深度学习的交通设施 <strong class="text-secondary font-weight-600">检测模型研究.</strong></h1>
+                                    <a href="{{ url_for('video') }}" class="butn primary"><span>Learn More</span></a>                      
+                                </div>
+                            </div>
+                        </div>
+                        <div class="banner-shape1 ani-move"></div>
+                    </div>
+                </div>
+                <div class="text-start item bg-img cover-background left-overlay-dark" data-overlay-dark="85" data-background="../static/img/banner/banner-02.jpg">
+                    <div class="container h-100 d-table position-relative z-index-9">
+                        <div class="d-table-cell align-middle">
+                            <div class="row align-items-center">
+                                <div class="col-md-10 col-lg-9 col-xl-7">
+                                    <span class="text-secondary mb-3 sub-title">Welcome to Website</span>                                
+                                    <h1 class="text-white display-12 display-sm-10 display-md-6 display-lg-4 display-xl-3 display-xxl-1 mb-1-9 mb-md-2-9">Through <strong class="text-secondary font-weight-600">YoloV9</strong> and <strong class="text-secondary font-weight-600">DeepSORT</strong> technology</h1>
+                                    <a href="{{ url_for('video') }}" class="butn primary"><span>Learn More</span></a>                      
+                                </div>
+                            </div>
+                        </div>
+                        <div class="banner-shape1 ani-move"></div>
+                    </div>
+                </div>
+                <div class="text-start item bg-img cover-background left-overlay-dark" data-overlay-dark="85" data-background="../static/img/banner/banner-03.jpg">
+                    <div class="container h-100 d-table position-relative z-index-9">
+                        <div class="d-table-cell align-middle">
+                            <div class="row align-items-center">
+                                <div class="col-md-10 col-lg-9 col-xl-7">
+                                    <span class="text-secondary mb-3 sub-title">Welcome to Website</span>                                
+                                    <h1 class="text-white display-12 display-sm-10 display-md-6 display-lg-4 display-xl-3 display-xxl-1 mb-1-9 mb-md-2-9">Hope <strong class="text-secondary font-weight-600"> protection.</strong></h1>
+                                    <a href="{{ url_for('video') }}" class="butn primary"><span class="">Learn more</span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="banner-shape1 ani-move"></div>
+                    </div>
+                </div>
+            </div>
+            <span class="banner-shape2 d-none d-sm-inline-block"></span>
+            <div class="d-none d-sm-inline-block p-10 bg-transparent border border-width-2 border-secondary position-absolute bottom-5 rounded-circle right ani-top-bottom z-index-3"></div>
+        </section>
+    </div>
+    <div class="Sidebar">
+        <!-- --lqj是自定义属性，通过var函数可调用 -->
+        <li style="--lqj:25%;">
+            <a href="{{ url_for('index') }}">
+                <i class="fa fa-home" aria-hidden="false"></i>
+            </a>
+        </li>
+        <li style="--lqj:35%;">
+            <a href="{{ url_for('video') }}">
+                <i class="fa fa-youtube-play" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:45%;">
+            <a href="{{ url_for('analysis') }}">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i>
+            </a>
+        </li>
+<!--        <li style="&#45;&#45;lqj:50%;">-->
+<!--            <a href="#">-->
+<!--                <i class="fa fa-history" aria-hidden="true"></i>-->
+<!--            </a>-->
+<!--        </li>-->
+        <li style="--lqj:55%;">
+            <a href="{{ url_for('question') }}">
+                <i class="fa fa-question" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:65%;">
+            <a href="{{ url_for('information') }}">
+                <i class="fa fa-address-card" aria-hidden="true"></i>
+            </a>
+        </li>
+        <div class="top"></div>
+        <div class="middle"></div>
+        <div class="bottom"></div>
+    </div>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/core.min.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>

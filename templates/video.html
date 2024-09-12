@@ -1,0 +1,241 @@
+<!DOCTYPE >
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>大创</title>
+    <link rel="stylesheet" href="../static/css/plugins.css">
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/sidebar.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        body {
+                    margin: 0;
+                    height: 100vh;
+                    background: url('../static/img/banner/banner-06.jpg') center/cover no-repeat;
+                    position: relative;
+
+                }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5); /* 背景色 + 透明度设置为0.9 */
+            z-index: -1;
+        }
+        :root {
+        --sidebar-bg-color: rgb(255, 255, 255);
+        }
+        .Sidebar:hover li a i {
+            color: black; /* 当侧边栏展开时，所有图标变为黑色 */
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="Sidebar">
+        <!-- --lqj是自定义属性，通过var函数可调用 -->
+        <li style="--lqj:25%;">
+            <a href="{{ url_for('index') }}">
+                <i class="fa fa-home" aria-hidden="false"></i>
+            </a>
+        </li>
+        <li style="--lqj:35%;">
+            <a href="{{ url_for('video') }}">
+                <i class="fa fa-youtube-play" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:45%;">
+            <a href="{{ url_for('analysis') }}">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i>
+            </a>
+        </li>
+<!--        <li style="&#45;&#45;lqj:50%;">-->
+<!--            <a href="#">-->
+<!--                <i class="fa fa-history" aria-hidden="true"></i>-->
+<!--            </a>-->
+<!--        </li>-->
+        <li style="--lqj:55%;">
+            <a href="{{ url_for('question') }}">
+                <i class="fa fa-question" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li style="--lqj:65%;">
+            <a href="{{ url_for('information') }}">
+                <i class="fa fa-address-card" aria-hidden="true"></i>
+            </a>
+        </li>
+        <div class="top"></div>
+        <div class="middle"></div>
+        <div class="bottom"></div>
+    </div>
+    <div class="navbar-header navbar-header-custom"style="margin-left: 2%;">
+        <a href="{{ url_for('index') }}" class="navbar-brand logodefault"><img id="logo" src="../static/img/logo.png" alt="logo"></a>
+    </div>
+    <div style="border-bottom: 1px solid rgb(232, 232, 232); width: 100%;"></div>
+
+    <div class="grid-container">
+        <div class="grid-item container-item1">
+            <div class="content-container">
+                <div class="title1">当前检测</div>
+                <img id="video" >
+            </div>
+        </div>
+
+        <div class="grid-item container-item2">
+            <div class="content-container">
+                <div class="title2">历史检测</div>
+                <div class="slideshow-container" id="slideshow-container1">
+                </div>
+            </div>
+        </div>
+        <div class="grid-item container-item3">            
+            <div class="content-container">
+                <div class="title3">历史检测</div>
+                <div class="slideshow-container" id="slideshow-container2">
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <div class="source-element"><a class="source-modal" >Source</a></div>-->
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/core.min.js"></script>
+    <script src="../static/js/main.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:5000');
+        socket.on('video_frame', function(data) {
+            var img = document.getElementById('video');
+            img.src = 'data:image/jpeg;base64,' + data.frame;
+        });
+    </script>
+<script>
+    let slideIndex1 = 1;
+
+    // 动态加载图片并生成轮播图
+    async function loadImages1() {
+        try {
+            const response1 = await fetch('/get_images1');
+            if (!response1.ok) {
+                throw new Error(`HTTP error! status: ${response1.status}`);
+            }
+
+            const images1 = await response1.json();
+            const slideshowContainer1 = document.getElementById('slideshow-container1');
+
+            images1.forEach((image, index) => {
+                // 创建图片轮播项
+                const slideDiv1 = document.createElement('div');
+                slideDiv1.classList.add('mySlides1', 'fade');
+                const imgElement1 = document.createElement('img');
+                imgElement1.src = `${image}`;
+                imgElement1.alt = `Slide ${index + 1}`;
+                slideDiv1.appendChild(imgElement1);
+                slideshowContainer1.appendChild(slideDiv1);
+            });
+
+            // 显示第一张图片
+            showSlides1(slideIndex1);
+        } catch (error) {
+            console.error('Error loading images:', error);
+        }
+    }
+
+    function plusSlides1(n) {
+        showSlides1(slideIndex1 += n);
+    }
+
+    function currentSlide1(n) {
+        showSlides1(slideIndex1 = n);
+    }
+
+    function showSlides1(n) {
+        const slides1 = document.getElementsByClassName('mySlides1');
+        if (n > slides1.length) { slideIndex1 = 1; }
+        if (n < 1) { slideIndex1 = slides1.length; }
+        for (let i = 0; i < slides1.length; i++) {
+            slides1[i].style.display = 'none';
+        }
+        slides1[slideIndex1 - 1].style.display = 'block';
+    }
+
+    // 自动轮播
+    setInterval(function() {
+        plusSlides1(1);
+    }, 3000);  // 每3秒切换一次
+
+</script>
+
+<script>
+    let slideIndex2 = 1;
+
+    // 动态加载图片并生成轮播图
+    async function loadImages2() {
+        try {
+            const response2 = await fetch('/get_images2');
+            if (!response2.ok) {
+                throw new Error(`HTTP error! status: ${response2.status}`);
+            }
+
+            const images2 = await response2.json();
+            const slideshowContainer2 = document.getElementById('slideshow-container2');
+
+            images2.forEach((image, index) => {
+                // 创建图片轮播项
+                const slideDiv2 = document.createElement('div');
+                slideDiv2.classList.add('mySlides2', 'fade');
+                const imgElement2 = document.createElement('img');
+                imgElement2.src = `${image}`;
+                imgElement2.alt = `Slide ${index + 1}`;
+                slideDiv2.appendChild(imgElement2);
+                slideshowContainer2.appendChild(slideDiv2);
+            });
+
+            // 显示第一张图片
+            showSlides2(slideIndex2);
+        } catch (error) {
+            console.error('Error loading images:', error);
+        }
+    }
+
+    function plusSlides2(n) {
+        showSlides2(slideIndex2 += n);
+    }
+
+    function currentSlide2(n) {
+        showSlides2(slideIndex2 = n);
+    }
+
+    function showSlides2(n) {
+        const slides2 = document.getElementsByClassName('mySlides2');
+        if (n > slides2.length) { slideIndex2 = 1; }
+        if (n < 1) { slideIndex2 = slides2.length; }
+        for (let i = 0; i < slides2.length; i++) {
+            slides2[i].style.display = 'none';
+        }
+        slides2[slideIndex2 - 1].style.display = 'block';
+    }
+
+    // 自动轮播
+    setInterval(function() {
+        plusSlides2(1);
+    }, 3000);  // 每3秒切换一次
+</script>
+
+<script>
+// 页面加载时调用 loadImages1 和 loadImages2 函数
+window.onload = function() {
+    loadImages1();
+    loadImages2();
+};
+</script>
+
+</body>
+
+</html>
