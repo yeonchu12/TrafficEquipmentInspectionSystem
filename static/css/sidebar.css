@@ -114,7 +114,7 @@ body{
     width: 90%;
     margin-left: 10%;
     display: grid;
-    grid-template-columns: 50% 40%;
+    grid-template-columns: 40% 50%;
     grid-template-rows: 50% 50%;
     height: 87vh;
     grid-gap: 50px;
